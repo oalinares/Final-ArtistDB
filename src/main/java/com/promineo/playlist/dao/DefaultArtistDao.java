@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -17,7 +18,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import com.promineo.playlist.entity.Artist;
-import com.promineo.playlist.entity.ArtistInput;
+import com.promineo.playlist.entity.ArtistInputEntity;
 import lombok.extern.slf4j.Slf4j;
 
 @Repository
@@ -28,6 +29,8 @@ public class DefaultArtistDao implements ArtistDao {
   public DefaultArtistDao(NamedParameterJdbcTemplate jdbcTemplate) {
     this.jdbcTemplate = jdbcTemplate;
   }
+  
+  
   
   @Override
   public Optional<Artist> fetchArtist(String artistName) {
@@ -41,7 +44,6 @@ public class DefaultArtistDao implements ArtistDao {
         public Artist mapRow(ResultSet rs, int rowNum) {
             try {
               Artist artist = new Artist(
-                  rs.getInt("artist_pk"),
                   rs.getString("artist_name"),
                   rs.getInt("initial_formation"),
                   rs.getBigDecimal("artist_rating"),
@@ -52,7 +54,7 @@ public class DefaultArtistDao implements ArtistDao {
             }       
         }
       });
-      if(artist.size() ==1) {
+      if(artist.size() >= 1) {
         return Optional.of(artist.get(0));
       }
       return Optional.empty();
@@ -60,24 +62,49 @@ public class DefaultArtistDao implements ArtistDao {
  
   
 }
-//BAD REQUEST ON THIS METHOD, MUST TEST
+
   @Override
-  public Optional<Artist> createArtist(ArtistInput artistInput) {
-    if((artistInput != null) && (artistInput.isValid())) {
+  public Stream<Artist> fetchAllArtists() {
+    String sql = "SELECT artist_pk, artist_name, initial_formation, artist_rating, notes "
+               + "FROM artist;";
+    
+    List<Artist> artists = jdbcTemplate.query(sql, new RowMapper<>() {
+      public Artist mapRow(ResultSet rs, int rowNum) {
+          try {
+            Artist artist = new Artist(
+                rs.getString("artist_name"),
+                rs.getInt("initial_formation"),
+                rs.getBigDecimal("artist_rating"),
+                rs.getString("notes"));
+                return artist;
+          } catch (SQLException e) {
+            return null;
+          }       
+      }
+    });
+    return artists.stream();
+  }
+
+
+
+  @Override
+  public Optional<Artist> createArtist(ArtistInputEntity input) {
+    if((input != null) && (input.isValid())) {
       String sql = ""
-          + "INSERT INTO artist (artist_pk, artist_name, initial_formation, artist_rating, notes) "
+          + "INSERT INTO artist (artist_name, initial_formation, artist_rating, notes) "
           + "VALUES (:artist_name, :initial_formation, :artist_rating, :notes);";
+      
       Map<String, Object> params = new HashMap<>();
-      params.put("artist_name", artistInput.getArtistName());
-      params.put("initial_formation", artistInput.getInitialFormation());
-      params.put("artist_rating", artistInput.getArtistRating());
-      params.put("notes", artistInput.getNotes());
+      params.put("artist_name", input.getArtistName());
+      params.put("initial_formation", input.getInitialFormation());
+      params.put("artist_rating", input.getArtistRating());
+      params.put("notes", input.getNotes());
       
       int rows = jdbcTemplate.update(sql, params);
-      if (rows == 1) {
-        return fetchArtist(artistInput.toString());
-      }
       
+      if(rows == 1) {
+        return fetchArtist(input.getArtistName());
+      }
     }
     return Optional.empty();
   }

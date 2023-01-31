@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Album implements Comparable<Album> {
-  private Integer albumPk;
+  private Long albumPk;
   private String albumName;
   private Date releaseDate;
   private BigDecimal albumRating;

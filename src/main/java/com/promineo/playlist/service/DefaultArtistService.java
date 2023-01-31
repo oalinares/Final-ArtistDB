@@ -1,16 +1,14 @@
 package com.promineo.playlist.service;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.promineo.playlist.dao.ArtistDao;
 import com.promineo.playlist.entity.Artist;
-import com.promineo.playlist.entity.ArtistInput;
-import lombok.extern.slf4j.Slf4j;
+import com.promineo.playlist.entity.ArtistInputEntity;
 
 @Service
 public class DefaultArtistService implements ArtistService {
@@ -21,6 +19,7 @@ public class DefaultArtistService implements ArtistService {
     this.artistDao = artistDao;
   }
   
+  @Transactional
   @Override
   public Artist fetchArtist(String artistName) {
     if((artistName != null) && (! artistName.isEmpty())) {
@@ -31,17 +30,27 @@ public class DefaultArtistService implements ArtistService {
     }
     return null;
   }
-
+  
+  @Transactional
   @Override
-  public Artist createArtist(ArtistInput artistInput) {
-    if((artistInput != null) && (artistInput.isValid())) {
-      Optional<Artist> artist = artistDao.createArtist(artistInput);
+  public List<Artist> fetchAllArtists() {
+    Stream <Artist> artists = artistDao.fetchAllArtists();
+    return artists.collect(Collectors.toList());
+  }
+
+  @Transactional
+  @Override
+  public Artist createArtist(ArtistInputEntity input) {
+    if(input != null && input.isValid()) {
+      Optional<Artist> artist = artistDao.createArtist(input);
       if(artist.isPresent()) {
         return artist.get();
       }
     }
     return null;
   }
+
+  
 
   
 }

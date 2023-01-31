@@ -3,7 +3,7 @@ package com.promineo.playlist.service;
 import java.util.List;
 import java.util.Optional;
 import com.promineo.playlist.entity.Artist;
-import com.promineo.playlist.entity.ArtistInput;
+import com.promineo.playlist.entity.ArtistInputEntity;
 
 public interface ArtistService {
   /**
@@ -13,7 +13,11 @@ public interface ArtistService {
    */
   Artist fetchArtist(String artistName);
 
-  Artist createArtist(ArtistInput artistInput);
+  List<Artist> fetchAllArtists();
+
+  Artist createArtist(ArtistInputEntity input);
+
+  
 
   
 }

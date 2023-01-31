@@ -2,12 +2,17 @@ package com.promineo.playlist.dao;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 import com.promineo.playlist.entity.Artist;
-import com.promineo.playlist.entity.ArtistInput;
+import com.promineo.playlist.entity.ArtistInputEntity;
 
 public interface ArtistDao {
 
   Optional<Artist> fetchArtist(String artistName);
 
-  Optional<Artist> createArtist(ArtistInput artistInput);
+  Stream<Artist> fetchAllArtists();
+
+  Optional<Artist> createArtist(ArtistInputEntity input);
+
+  
 }

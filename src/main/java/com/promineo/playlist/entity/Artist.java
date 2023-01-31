@@ -23,16 +23,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Artist {
-  private Integer artistPk;
+  
   private String artistName;
   private Integer initialFormation;
   private BigDecimal artistRating;
   private String notes;
   
-  @JsonIgnore
-  public Integer getArtistPk() {
-    return artistPk;
-  }
+  
+
   
   
   

@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Song {
-  private Integer songPk;
+  private Long songPk;
   private Album album;
   private String songName;
   private Integer songOrder;
