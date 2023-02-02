@@ -1,18 +1,22 @@
 package com.promineo.playlist.dao;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 import com.promineo.playlist.entity.Artist;
-import com.promineo.playlist.entity.ArtistInputEntity;
 
 public interface ArtistDao {
 
-  Optional<Artist> fetchArtist(String artistName);
+  List<Artist> fetchArtist(String artistName);
 
-  Stream<Artist> fetchAllArtists();
+  Optional<Artist> createArtist(String artistName, int initialFormation, BigDecimal artistRating,
+      String notes);
 
-  Optional<Artist> createArtist(ArtistInputEntity input);
+  Optional<Artist> updateArtist(String artistName, BigDecimal artistRating, String notes);
 
-  
+  Optional<Artist> deleteArtist(String artistName);
+
+ 
+
+ 
 }

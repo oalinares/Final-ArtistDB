@@ -1,23 +1,20 @@
 package com.promineo.playlist.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import com.promineo.playlist.entity.Artist;
-import com.promineo.playlist.entity.ArtistInputEntity;
 
 public interface ArtistService {
-  /**
-   * Gets an artist by the artist's name.
-   * @param artistName
-   * @return The artist that was searched, or else null
-   */
-  Artist fetchArtist(String artistName);
 
-  List<Artist> fetchAllArtists();
+  List<Artist> fetchArtist(String artistName);
 
-  Artist createArtist(ArtistInputEntity input);
+  Optional<Artist> createArtist(String artistName, int initialFormation, BigDecimal artistRating,
+      String notes);
 
-  
+  Optional<Artist> updateArtist(String artistName, BigDecimal artistRating, String notes);
+
+  Optional<Artist> deleteArtist(String artistName);
 
   
 }

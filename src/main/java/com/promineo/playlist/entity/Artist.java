@@ -16,22 +16,17 @@ import lombok.NoArgsConstructor;
  * @author racso
  *
  */
-
-
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class Artist {
+  
   
   private String artistName;
   private Integer initialFormation;
   private BigDecimal artistRating;
   private String notes;
-  
-  
 
-  
-  
-  
 }
+  
