@@ -1,5 +1,6 @@
 package com.promineo.playlist.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,7 +19,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Song {
   private Long songPk;
-  private Album album;
+  private Long albumFk;
   private String songName;
-  private Integer songOrder;
+  
+  @JsonIgnore
+  public Long getAlbumFk() {
+    return albumFk;
+  }
+  @JsonIgnore
+  public Long getSongPk() {
+    return songPk;
+  }
 }
